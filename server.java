@@ -1,38 +1,35 @@
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 
-import javax.sound.sampled.SourceDataLine;
+public class server{
+    public static void main(String[] args) throws IOException {
+        ServerSocket serversocket = new ServerSocket(22222);
+        System.out.println("Server started");
 
-public class server {
-    public static void main(String[] args) {
-       
+        while(true){
+            Socket socket = serversocket.accept();
+            System.out.println("Server accept socket");
 
-        //server started
-        try {
-            System.out.println("server started");
-            ServerSocket ss = new ServerSocket(6666);
-           while(true){
-                Socket socket = ss.accept();
+            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 
-                 ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-                ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-
-                //input read which is reached from client 
+            try {
+                //input read from client
                 Object cmsg = ois.readObject();
-                 System.out.println("Message from input is :"+ (String)cmsg);
+                System.out.println("msg from client to server : "+ (String)cmsg);
 
-                 String ack = (String)cmsg;
-                 ack = ack.toUpperCase();
+                //replay to client
+                String serverReply = (String)cmsg;
+                serverReply = serverReply.toUpperCase();
+                oos.writeObject(serverReply);
 
-                 oos.writeObject(ack);
-           }
-            
-
-            
-        } catch (Exception e) {
-            //TODO: handle exception
-            System.out.println(e);
+            } catch (ClassNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
-        
-}      
+}
