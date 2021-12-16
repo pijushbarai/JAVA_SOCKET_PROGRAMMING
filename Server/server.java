@@ -1,4 +1,5 @@
 
+import java.io.File;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
@@ -27,6 +28,15 @@ public class server {
                 //terminating conversation
                 if(clientSms.equals("bye")){
                     break;
+                }
+                //file block added
+                if (clientSms.equalsIgnoreCase("LS")) {
+                    File fl = new File("../Server");
+                    File[] files = fl.listFiles();
+                    for (int i = 0; i < files.length; i++) {
+                        oos.writeUTF(files[i].getName());
+                    }
+                    oos.writeUTF("End");
                 }
 
                 // Write object to client from console

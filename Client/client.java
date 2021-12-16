@@ -18,6 +18,17 @@ public class client {
             // write message to Server
             message = sc.nextLine();
             oos.writeObject(message);
+            if (message.equalsIgnoreCase("LS")) {
+                
+                System.out.println("\tList:");
+                while (true) {
+                    String st = ois.readUTF();
+                    if (st.equals("End")) {
+                        break;
+                    }
+                    System.out.println("\t" + st);
+                }
+            }
 
             // read message from client
             try {
